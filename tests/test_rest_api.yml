@@ -1,0 +1,21 @@
+#! /usr/bin/env resttest.py
+
+---
+- config:
+    - testset: "Rest test cases"
+
+
+- test:
+    - name: "Post sample data to index"
+    - method: "POST"
+    - url: "/index"
+    - headers: {'User-Agent': 'HTTPie/0.9.9', 'Content-Type': 'application/x-www-form-urlencoded'}
+    - body: 'title=quick+fox&data=A+fox+is+usually+quick+and+borwn.&id=1'
+
+
+- test:
+    - name: "Post sample data to index"
+    - method: "POST"
+    - url: "/index"
+    - headers: {'User-Agent': 'HTTPie/0.9.9', 'Content-Type': 'application/x-www-form-urlencoded'}
+    - body: 'title=lazy+dog&data=A+quick+brown+fox+jumped+over+lazy+dog.+A+fox+is+always+jumping.&id=2'

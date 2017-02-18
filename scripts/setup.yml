@@ -1,0 +1,53 @@
+#! /usr/bin/env ansible-playbook
+
+---
+- hosts: all
+
+  remote_user: chillaranand
+  become: yes
+  become_method: sudo
+
+  vars:
+    es_file: elasticsearch-5.2.1.deb
+
+
+  tasks:
+
+    - block:
+      - name: add java repository to sources
+        action: apt_repository repo='ppa:webupd8team/java'
+
+      - name: accept license for java
+        debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+
+      - name: update apt package cache
+        action: apt update_cache=yes cache_valid_time=3600
+
+      - name: install java 8
+        action: apt pkg=oracle-java8-installer state=latest install_recommends=yes
+
+      - name: set java 8 env
+        action: apt pkg=oracle-java8-set-default state=latest install_recommends=yes
+
+
+    - block:
+      - name: Check if elasticsearch is installed
+        stat: path=/etc/init.d/elasticsearch
+        register: elasticsearch
+
+      - name: download elasticsearch deb package
+        get_url:
+          url="https://artifacts.elastic.co/downloads/elasticsearch/{{ es_file }}"
+          dest="/tmp/{{ es_file }}"
+        when:
+          elasticsearch.stat.exists == False
+
+      - name: install elasticsearch
+        apt: deb="/tmp/{{ es_file }}"
+        when:
+          elasticsearch.stat.exists == False
+
+      - name: start elasticsearch on bootup
+        command: update-rc.d elasticsearch defaults
+        when:
+          elasticsearch.stat.exists == False

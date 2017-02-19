@@ -8,6 +8,11 @@ from .inputs import Words
 
 
 @csrf_exempt
+def home(request):
+    return JsonResponse({'message': 'Plase hit the appropriate endpoint.'})
+
+
+@csrf_exempt
 def index(request):
     doc_id = request.POST.get('id', '').strip()
     title = request.POST.get('title', '').strip()

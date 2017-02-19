@@ -3,12 +3,16 @@
 ---
 - hosts: all
 
-  remote_user: chillaranand
   become: yes
   become_method: sudo
 
   vars:
     es_file: elasticsearch-5.2.1.deb
+    user: chillaranand
+    home: "/home/{{ user }}"
+    project: search
+    project_dir: "{{ home }}/{{ project }}"
+    ssh_key: "{{ home }}/.ssh/id_rsa"
 
 
   tasks:
@@ -51,3 +55,16 @@
         command: update-rc.d elasticsearch defaults
         when:
           elasticsearch.stat.exists == False
+
+    - name: clone repo
+      git:
+        repo=git@github.com:ChillarAnand/search.git
+        dest="{{ project_dir }}"
+        accept_hostkey=yes
+        key_file="{{ ssh_key }}"
+
+    - name: create virtualenv and install requirements
+      pip:
+        requirements: "{{ project_dir }}/requirements.txt"
+        virtualenv: "{{ home }}/.virtualenvs/{{ project }}"
+        virtualenv_python: python3.5

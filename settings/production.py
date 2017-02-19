@@ -1,9 +1,11 @@
+# flake8: noqa
+
 import ast
 import os
 
 import dj_database_url
 
-from .base import *  # NOQA
+from .base import *
 
 
 DEBUG = ast.literal_eval(os.environ.get('DEBUG', 'False'))

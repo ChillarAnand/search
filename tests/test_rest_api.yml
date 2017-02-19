@@ -10,7 +10,7 @@
     - method: "POST"
     - url: "/index"
     - headers: {'User-Agent': 'HTTPie/0.9.9', 'Content-Type': 'application/x-www-form-urlencoded'}
-    - body: 'title=quick+fox&data=A+fox+is+usually+quick+and+borwn.&id=1'
+    - body: 'title=quick+fox&data=A+fox+is+usually+quick+and+brown.&id=1'
 
 
 - test:
@@ -19,3 +19,24 @@
     - url: "/index"
     - headers: {'User-Agent': 'HTTPie/0.9.9', 'Content-Type': 'application/x-www-form-urlencoded'}
     - body: 'title=lazy+dog&data=A+quick+brown+fox+jumped+over+lazy+dog.+A+fox+is+always+jumping.&id=2'
+
+
+- test:
+    - name: "Post sample data to index"
+    - method: "POST"
+    - url: "/index"
+    - headers: {'User-Agent': 'HTTPie/0.9.9', 'Content-Type': 'application/x-www-form-urlencoded'}
+    - body: 'title=test_title&data=test_data&id=3'
+
+
+- test:
+    - name: "Search query should return matched results"
+    - url: "/search?q=test_title"
+    - validators:
+        - compare: {jsonpath_mini: 'results.0.id', comparator: 'str_eq', expected: {template: '3'}}
+
+- test:
+    - name: "Search phrase should return exact results"
+    - url: '/search?q="brown%20fox"'
+    - validators:
+        - compare: {jsonpath_mini: 'results.0.id', comparator: 'str_eq', expected: {template: '2'}}

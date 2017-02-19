@@ -1,3 +1,15 @@
 Django==1.8
 django-haystack==2.6.0
 elasticsearch>=5.0.0,<6.0.0
+
+
+# production
+gunicorn==19.6.0
+
+
+# developmet
+django-extensions==1.7.5
+
+
+# testing
+pyresttest==1.7.1

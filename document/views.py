@@ -9,7 +9,7 @@ from .inputs import Words
 
 @csrf_exempt
 def home(request):
-    return JsonResponse({'message': 'Plase hit the appropriate endpoint.'})
+    return JsonResponse({'message': 'Plase hit /index or /search endpoints.'})
 
 
 @csrf_exempt
